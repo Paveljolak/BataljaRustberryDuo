@@ -1,1 +1,1 @@
-10/02/2024 - Basic brainstorming, trying to read basic information in the game, trying to set up attacks(Which planet will attack). Next: Work on which planet to attack. Problems: After several turns, planets start shooting off screen.
+09/02/2024 - 10/02/2024 - Basic brainstorming, trying to read basic information in the game, trying to set up attacks(Which planet will attack). Next: Work on which planet to attack. Problems: After several turns, planets start shooting off screen.
