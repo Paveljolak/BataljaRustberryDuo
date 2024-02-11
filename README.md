@@ -5,7 +5,9 @@ WORK: Basic brainstorming, trying to read basic information in the game, trying 
 PROBLEMS: After several turns, planets start shooting off screen.
 
 NEXT: Work on which planet to attack. 
+
 ----  
+
 DATE: 11/02/2024 - Created and submitted Player1.0. Tweeks of this bot are required.
 
 WORK: Player1.0: We find the bigest enemy planet we divide it by 2. If our planets have larger fleets than that value then we attack with them. We attack enemy or neutral planet with smallest fleet size. 
