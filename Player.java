@@ -46,6 +46,14 @@ public class Player {
 	public static String[] neutralFleets;
 
 
+// This is for finding the planet with the smallest fleet size so we can attack it.
+	public static String[] joinedFleets;
+	public static String[] joinedPlanetNames;
+
+
+
+
+
 
 
 
@@ -70,6 +78,9 @@ public class Player {
 					this class
 				*/
 				getGameState();
+				
+
+				
 
 				/*
 				 	*********************************
@@ -94,95 +105,56 @@ public class Player {
 					myPlanets = bluePlanets;
 					myFleets = blueFleets;
 					friendlyPlayerPlanets = cyanPlanets;
-					String[] potentialTargets = {"green", "yellow", "neutral"};
-
-
-
-					// First find our planet with bigest fleet size.
-
-					// Find closest enemy planet. 
-					// go through all potential targets, find planet with closes coordinates for x and for y.
-					// 
-
-
-
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					joinedPlanetNames = joinArrays(greenPlanets, yellowPlanets, neutralPlanets);
+					joinedFleets = joinArrays(greenFleets, yellowFleets, neutralFleets);
 				} 
 
 				if (myColor.equals("cyan")) {
 					myPlanets = cyanPlanets;
 					myFleets = cyanFleets;
 					friendlyPlayerPlanets = bluePlanets;
-					String[] potentialTargets = {"green", "yellow", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					joinedPlanetNames = joinArrays(greenPlanets, yellowPlanets, neutralPlanets);
+					joinedFleets = joinArrays(greenFleets, yellowFleets, neutralFleets);
 				} 
 
 				if (myColor.equals("green")) {
 					myPlanets = greenPlanets;
 					myFleets = greenFleets;
 					friendlyPlayerPlanets = yellowPlanets;
-					String[] potentialTargets = {"cyan", "blue", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					joinedPlanetNames = joinArrays(cyanPlanets, bluePlanets, neutralPlanets);
+					joinedFleets = joinArrays(cyanFleets, blueFleets, neutralFleets);
 				} 
 				
 				if (myColor.equals("yellow")) {
 					myPlanets = yellowPlanets;
 					myFleets = yellowFleets;
 					friendlyPlayerPlanets = greenPlanets;
-					String[] potentialTargets = {"cyan", "blue", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					joinedPlanetNames = joinArrays(cyanPlanets, bluePlanets, neutralPlanets);
+					joinedFleets = joinArrays(cyanFleets, blueFleets, neutralFleets);
 				}
 
-				/*
-					- based on the color selected as the target,
-					find the planets of the targeted player
-				*/
-				String[] targetPlayerPlanets = new String[0];
-				if (targetPlayer.equals("blue")) {
-					targetPlayerPlanets = bluePlanets;
-				}
 
-				if (targetPlayer.equals("cyan")) {
-					targetPlayerPlanets = cyanPlanets;
-				}
+				int enemyMaxFleetSize = Integer.parseInt(joinedPlanetNames[findMaxFleetSize(joinedFleets)]);
+				//int myMaxFleetSize = findMaxFleetSize(myFleets);
+				if (joinedPlanetNames.length > 0 && myPlanets.length > 0) {
+					
+					String targetPlanet = joinedPlanetNames[findMinFleetSize(joinedFleets)];
+					
 
-				if (targetPlayer.equals("green")) {
-					targetPlayerPlanets = greenPlanets;
-				}
-
-				if (targetPlayer.equals("yellow")) {
-					targetPlayerPlanets = yellowPlanets;
-				}
-
-				if (targetPlayer.equals("neutral")) {
-					targetPlayerPlanets = neutralPlanets;
-				}
-				/*
-					- if the target player has any planets
-					and if i have any planets (we could only have 
-					fleets) attack a random planet of the target 
-					from each of my planets
-				*/
-
-				
-				int maxFleetSize = findMaxFleetSize(myFleets);
-				if (targetPlayerPlanets.length > 0 && myPlanets.length > 0) {
-					for (int i = 0 ; i < myPlanets.length ; i++) {
-						// find my planet with largest fleet size
-						String myPlanet = myPlanets[maxFleetSize];
-
-						// instead of attacking random enemy find closest enemy to target.
-
-						int randomEnemyIndex = rand.nextInt(targetPlayerPlanets.length);
-						String randomTargetPlanet = targetPlayerPlanets[randomEnemyIndex];
-						/*
-							- printing the attack will tell the game to attack
-							- be carefull to only use System.out.println for printing game commands
-							- for debugging you can use logToFile() method
-						*/
-						System.out.println("A " + myPlanet + " " + randomTargetPlanet + " 1");
+					for(int i = 0; i < myPlanets.length; i++ ){
+						String myPlanet = myPlanets[i];
+						if(Integer.parseInt(myFleets[i]) > (enemyMaxFleetSize/2)){
+							logToFile("Attack from: " + myPlanet + " with force: " + myFleets[i]);
+							logToFile("Attack this one: " + targetPlanet + " cuz bigest enemy planet has half force of: " + (enemyMaxFleetSize/2));
+							System.out.println("A " + myPlanet + " " + targetPlanet + " 30");
+						}
+						else{
+							logToFile("Don't attack with planet: " + myPlanet);
+						}	
 					}
 				}
+				
+				
 				
 				/*
 					- send a hello message to your teammate bot :)
@@ -206,17 +178,77 @@ public class Player {
 		
 	}
 
+	public static int findSmallestElement(int[] array) {
+        // Check if the array is empty
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException("Array is empty");
+        }
 
-	public static int findMaxFleetSize(String[] fleet) {
-		int currMax = 0;
+        // Assume the first element is the smallest
+        int smallest = array[0];
+
+        // Iterate through the array to find the smallest element
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < smallest) {
+                smallest = array[i];
+            }
+        }
+
+        return smallest;
+    }
+
+// ______________________________________________________________________________________________________________________________
+	// FINDING YOUR OWN PLANET WITH THE HIGHEST FLEET SIZE
+		public static int findMaxFleetSize(String[] fleet) {
+			int currMax = 0;
+			for(int i = 0; i < fleet.length; i++) {
+				if (Integer.parseInt(fleet[i]) > Integer.parseInt(fleet[currMax])) {
+					currMax = i;
+				}
+			}
+			return currMax;
+		}
+// ______________________________________________________________________________________________________________________________
+
+
+// ______________________________________________________________________________________________________________________________
+	// FINDING OPOSING PLANET WITH SMALLEST FLEET SIZE
+	public static int findMinFleetSize(String[] fleet) {
+		int currMin = 0;
 		for(int i = 0; i < fleet.length; i++) {
-			if (Integer.parseInt(fleet[i]) > currMax) {
-				currMax = i;
+			if (Integer.parseInt(fleet[i]) < Integer.parseInt(fleet[currMin])) {
+				currMin = i;
 			}
 		}
-		return currMax;
+		return currMin;
 	}
+// ______________________________________________________________________________________________________________________________
 
+
+// ______________________________________________________________________________________________________________________________
+// JOINING ATTACKING PLANETS INTO ONE BIG ARRAY
+	public static String[] joinArrays(String[] firstEnemy, String[] secondEnemy, String[] neutral){
+		
+	
+		
+		 // Calculate the total length of the combined array
+		 int totalLength = firstEnemy.length + secondEnemy.length + neutral.length;
+
+		 // Create a new array with the total length
+		 String[] joinedArray = new String[totalLength];
+ 
+		 // Copy each array into the combined array
+		 System.arraycopy(firstEnemy, 0, joinedArray, 0, firstEnemy.length);
+		 System.arraycopy(secondEnemy, 0, joinedArray, firstEnemy.length, secondEnemy.length);
+		 System.arraycopy(neutral, 0, joinedArray, firstEnemy.length + secondEnemy.length, neutral.length);
+ 
+		 // Now, 'combinedArray' contains all elements from the three arrays
+
+
+
+		return joinedArray;
+	}
+// ______________________________________________________________________________________________________________________________
 
 	/**
 	 * This function should be used instead of System.out.print for 
@@ -419,15 +451,7 @@ public class Player {
 		greenFleets = greenFleetsList.toArray(new String[0]);
 		yellowFleets = yellowFleetsList.toArray(new String[0]);
 		neutralFleets =neutralFleetsList.toArray(new String[0]);
-
 		
-
-
-
-
-
-
-
 
 					// PROTOTYPES
 					// A lot of ifs and elses and ANDS. fleet_size(i) and planet_name(i) and coordinats(i) 
@@ -437,3 +461,4 @@ public class Player {
 					// }
 	}
 }
+
