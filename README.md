@@ -1,3 +1,16 @@
+DATE: 19/02/2024 - Trying to make different strategy for attacking. 
+
+WORK: Parsing all the fleet. We working on a new kind of attack where we do not overkill a single planet. Especially the neutral ones since they do not heal. 
+
+PROBLEMS: We are not taking into consideration only our fleets. We are taking into consideration all the fleets from all planets. 
+
+NEXT: Easy change. We need to have our fleets and enemy fleets. Would make life easier.
+
+
+
+
+----
+
 DATE: 13/02/2024 - Zhivko changed the way we read the gameState, by using hashmap. Genius move saves a lot of code. And we made a bot with delay and eventually flanks the enemies by shooting the furthest one.
 
 WORK: Created Bot3, a bot with delay the smaller the planet the bigger the delay since we need more time to regenerate our fleet_size. Given that most people (just a guess) would use the attack closest planet strategy, this bot uses the strategy where when all of the netural planets are gone, it counts ~20 turns (this value can be changed) and it shoots the planet that is globally furthest from ours. It goes through all distances of enemy planets given our planets, finds the closest one, and then calculates which one of our planet is furthest from this one enemy planet that is closest one of our planets, and then shoots the furthest planet from our chosen planet. Meaning globally we would shoot with our planet in one corner an enemy planet in the opposite corner.
